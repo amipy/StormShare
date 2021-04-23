@@ -41,8 +41,9 @@ headers={
 }
 
 authValid=False
-def sendAPI(address, headers, data, route):
-    r = requests.get(f"{address}{route}", headers=headers, data=simplejson.dumps(data).encode('utf-8'))
+def sendAPI(address, headers, data, route, method):
+    r=requests.request(method, f"{address}{route}", headers=headers, data=simplejson.dumps(data).encode('utf-8'))
+    #r = requests.get(f"{address}{route}", headers=headers, data=simplejson.dumps(data).encode('utf-8'))
     if r.status_code==404:
         print("Failed to connect to server.")
     if r.status_code==500:
@@ -51,7 +52,7 @@ def sendAPI(address, headers, data, route):
 def loginCall():
     username=app.username.get()
     password=app.password.get()
-    response, _ = sendAPI(serverAddress, headers, {"auth":[username,enkode(password)]}, "auths/validate")
+    response, _ = sendAPI(serverAddress, headers, {"auth":[username,enkode(password)]}, "auths/validate", "GET")
     authValid = response["status"]
     print(authValid)
     if authValid:
